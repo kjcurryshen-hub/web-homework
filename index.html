@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="楷鈞的自我介紹與 HTML、Docker、Git 課程實作。">
+  <title>楷鈞的自我介紹｜Web Lab</title>
+  <!-- CSS 負責外觀。為了方便直接開啟，這個範例把樣式放在 HTML 裡。 -->
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f5f9;
+      --paper: #fff;
+      --ink: #162238;
+      --muted: #56657a;
+      --line: #d8e0eb;
+      --blue: #224fde;
+      --soft: #eaf0ff;
+      --nav: #101e35;
+      --code: #122139
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 85px
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.8
+    }
+
+    a {
+      color: var(--blue);
+      text-underline-offset: 4px
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid #e99a12;
+      outline-offset: 5px
+    }
+
+    .skip {
+      position: absolute;
+      top: -80px;
+      left: 15px;
+      background: var(--paper);
+      padding: 8px;
+      z-index: 10
+    }
+
+    .skip:focus {
+      top: 10px
+    }
+
+    header {
+      background: var(--nav);
+      color: white
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 17px 24px;
+      flex-wrap: wrap
+    }
+
+    .brand {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: .03em
+    }
+
+    .brand span {
+      font-weight: 400;
+      color: #a4b5cf;
+      font-size: 14px;
+      margin-left: 12px
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .nav-links a {
+      color: #e4eaf7;
+      text-decoration: none;
+      font-size: 14px
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline
+    }
+
+    main {
+      max-width: 1120px;
+      margin: auto;
+      padding: 48px 24px 56px
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-bottom: 42px
+    }
+
+    .eyebrow {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--);
+      letter-spacing: .13em;
+      margin: 0 0 20px
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #e6afcc;
+      line-height: 0.8;
+      letter-spacing: -.035em;
+      margin: 0 0 10px
+    }
+
+    h1 span {
+      font-size: 30px;
+      color: var(--ink)
+    }
+
+    .lead {
+      font-size: 21px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 0 24px
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 19px;
+      text-decoration: none;
+      font-weight: 650
+    }
+
+    .terminal {
+      background: var(--code);
+      color: #e3ebff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 18px 35px #172b4814
+    }
+
+    .terminal-head {
+      padding: 12px 20px;
+      border-bottom: 1px solid #31415b;
+      color: #adc0e0;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between
+    }
+
+    .terminal pre {
+      margin: 0;
+      padding: 23px;
+      font-size: 15px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere
+    }
+
+    .terminal .comment {
+      color: #a6bcda
+    }
+
+    .terminal .output {
+      color: #80e0c6
+    }
+
+    .section-title {
+      display: flex;
+      gap: 18px;
+      align-items: baseline;
+      margin-bottom: 16px
+    }
+
+    .section-title h2 {
+      font-size: 24px;
+      margin: 0
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    section {
+      margin-top: 36px
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 24px
+    }
+
+    .number {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: .1em
+    }
+
+    .card h3 {
+      font-size: 21px;
+      margin: 12px 0 6px
+    }
+
+    .card p {
+      color: var(--muted);
+      margin: 0
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 18px;
+      background: var(--soft);
+      color: var(--blue);
+      padding: 3px 10px;
+      font-size: 14px;
+      border-radius: 4px
+    }
+
+    .workspace {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+      padding: 0 20px;
+      gap: 16px
+    }
+
+    .tabs button {
+      background: none;
+      color: var(--muted);
+      padding: 16px 8px;
+      border: 0;
+      border-bottom: 3px solid transparent
+    }
+
+    .tabs button[aria-selected="true"] {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      font-weight: 700
+    }
+
+    .panel {
+      padding: 26px
+    }
+
+    .panel[hidden] {
+      display: none
+    }
+
+    .panel h3 {
+      margin: 0 0 8px
+    }
+
+    .panel p {
+      margin: 0 0 14px;
+      color: var(--muted)
+    }
+
+    .panel pre {
+      margin: 12px 0;
+      background: var(--code);
+      color: #e3ebff;
+      padding: 18px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.8
+    }
+
+    code {
+      font-family: Consolas, monospace
+    }
+
+    .hint {
+      font-size: 14px
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px
+    }
+
+    .copy {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: var(--paper);
+      padding: 5px 13px;
+      border-radius: 5px;
+      font-size: 14px
+    }
+
+    .copy:hover {
+      background: var(--soft)
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px
+    }
+
+    .notes,
+    .resources {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 24px
+    }
+
+    .notes h2,
+    .resources h2 {
+      margin: 0 0 14px;
+      font-size: 22px
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding: 13px 0
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    details p {
+      color: var(--muted);
+      margin: 9px 0
+    }
+
+    .resources ul {
+      padding-left: 21px;
+      margin: 0
+    }
+
+    .resources li {
+      margin: 10px 0
+    }
+
+    .status {
+      margin: 16px 0 0;
+      font-size: 14px;
+      color: var(--muted)
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      padding: 24px;
+      text-align: center;
+      font-size: 14px
+    }
+
+    @media(max-width:760px) {
+      main {
+        padding-top: 30px
+      }
+
+      .intro {
+        grid-template-columns: 1fr;
+        gap: 24px
+      }
+
+      .cards,
+      .bottom {
+        grid-template-columns: 1fr
+      }
+
+      .brand span {
+        display: none
+      }
+
+      .nav-links {
+        gap: 16px
+      }
+
+      .section-title {
+        display: block
+      }
+
+      .card {
+        padding: 20px
+      }
+
+      .tabs {
+        gap: 8px;
+        padding: 0 12px
+      }
+
+      .panel {
+        padding: 20px
+      }
+
+      .row {
+        align-items: flex-start
+      }
+
+      .terminal pre {
+        font-size: 14px
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">跳到主要內容</a>
+  <header>
+    <nav aria-label="主要導覽"><a class="brand" href="#main">WEB LAB<span>我的課程實作</span></a>
+      <div class="nav-links"><a href="#about">關於我</a><a href="#concepts">認識工具</a><a href="#practice">實作指令</a><a
+          href="#review">重點複習</a></div>
+    </nav>
+  </header>
+  <!-- HTML 負責內容與結構：導覽、標題、段落、區塊、連結。 -->
+  <main id="main">
+    <div class="intro">
+      <div>
+        <p class="eyebrow">HTML / DOCKER / GIT</p>
+        <h1>Hi, I am Kai!<br><span>Welcome to my page</span></span></h1>
+        <p class="lead">Graduated from NTPU CSIE.</p><a class="button" href="#practice">查看實作指令</a>
+      </div>
+      <div class="terminal" aria-label="Hello World 程式示意，並非即時執行結果">
+        <div class="terminal-head"><span>hello_world.py</span><span>程式示意</span></div>
+        <pre><span class="comment"># 每一個作品，都從第一行開始</span>
+print("Hello, world!")
+
+<span class="comment"># 預期輸出</span>
+<span class="output">Hello, world!</span></pre>
+      </div>
+    </div>
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-title">
+        <h2 id="about-title">關於我</h2><span>在動手實作中學習</span>
+      </div>
+      <div class="cards">
+        <article class="card"><span class="number">ABOUT ME</span>
+          <h3>楷鈞</h3>
+          <figure style="margin:12px 0"><img
+              src="data:image/jpeg;base64,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"
+              alt="手寫 Hello 字樣，取自課程 Hello World 範例，代表開始學習程式" width="120" height="52"
+              style="display:block;max-width:100%;height:auto;border:1px solid var(--line);background:white">
+            <figcaption style="font-size:14px;color:var(--muted)">我的起點：Hello World（課程代表圖）</figcaption>
+          </figure>
+          <p>這是我的自我介紹網頁，也是我練習把程式變成作品的起點。</p>
+        </article>
+        <article class="card"><span class="number">LEARNING</span>
+          <h3>興趣與學習方向</h3>
+          <ul style="padding-left:20px;color:var(--muted);margin:0">
+            <li>網頁設計與互動</li>
+            <li>Python 程式實作</li>
+            <li>探索開發工具的運作方式</li>
+          </ul>
+        </article>
+        <article class="card"><span class="number">MY GOAL</span>
+          <h3>理解整體如何運作</h3>
+          <p>先完成可執行的作品，再依序複習每個步驟，讓自己能說明、修改並展示成果。</p>
+        </article>
+      </div>
+    </section>
+    <section id="concepts" aria-labelledby="concepts-title">
+      <div class="section-title">
+        <h2 id="concepts-title">三個工具，各有任務</h2><span>先認識它們在這份作業中的角色</span>
+      </div>
+      <div class="cards">
+        <article class="card"><span class="number">01 / CONTENT</span>
+          <h3>HTML</h3>
+          <p>定義網頁的標題、段落與連結。CSS 決定外觀，JavaScript 處理互動。</p><span class="tag">把內容變成網頁</span>
+        </article>
+        <article class="card"><span class="number">02 / ENVIRONMENT</span>
+          <h3>Docker</h3>
+          <p>把程式和需要的執行環境放在一起，透過容器啟動，減少環境差異造成的問題。</p><span class="tag">讓環境可以重建</span>
+        </article>
+        <article class="card"><span class="number">03 / VERSION</span>
+          <h3>Git &amp; GitHub</h3>
+          <p>Git 記錄檔案版本，GitHub 儲存遠端專案；GitHub Pages 可以發布這個靜態網頁。</p><span class="tag">留下修改紀錄</span>
+        </article>
+      </div>
+    </section>
+    <section id="practice" aria-labelledby="practice-title">
+      <div class="section-title">
+        <h2 id="practice-title">讓作品跑起來</h2><span>指令在 Windows PowerShell 執行</span>
+      </div>
+      <div class="workspace">
+        <div class="tabs" role="tablist" aria-label="實作階段"><button id="tab-web" role="tab" aria-selected="true"
+            aria-controls="panel-web" data-panel="web">01 開啟網頁</button><button id="tab-docker" role="tab"
+            aria-selected="false" aria-controls="panel-docker" data-panel="docker" tabindex="-1">02
+            Docker</button><button id="tab-git" role="tab" aria-selected="false" aria-controls="panel-git"
+            data-panel="git" tabindex="-1">03 Git</button></div>
+        <div class="panel" id="panel-web" role="tabpanel" aria-labelledby="tab-web" tabindex="0">
+          <h3>先看到成品，再看程式</h3>
+          <p>解壓縮專案後，直接用瀏覽器開啟 <code>index.html</code>。你現在看到的頁面，就是這個檔案的內容。</p>
+          <p>若要啟動本機伺服器，在含有 <code>index.html</code> 的資料夾開啟 PowerShell，執行：</p>
+          <div class="row"><span class="hint">需要電腦已安裝 Python</span><button class="copy"
+              data-copy="web-command">複製指令</button></div>
+          <pre id="web-command">python -m http.server 8080 --bind 127.0.0.1</pre>
+          <p>接著開啟 <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a>。停止伺服器：在終端機按
+            Ctrl + C。</p>
+        </div>
+        <div class="panel" id="panel-docker" role="tabpanel" aria-labelledby="tab-docker" tabindex="0" hidden>
+          <h3>用容器提供同一個網頁</h3>
+          <p>先啟動 Docker Desktop。在專案根目錄執行下列指令；這是網頁的 Docker 延伸示範，教材的三個練習另放在 practice 資料夾。</p>
+          <div class="row"><span class="hint">第一次建置需要下載 Python 映像</span><button class="copy"
+              data-copy="docker-command">複製指令</button></div>
+          <pre id="docker-command">docker build -t web-homework .
+docker run -d --name web-homework-site -p 127.0.0.1:8080:8000 web-homework</pre>
+          <p>開啟 <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a>。8080
+            是電腦的連接埠，8000 是容器內伺服器的連接埠。</p>
+          <p class="hint">若上一個步驟的 Python 伺服器仍在執行，請先用 Ctrl + C 停止，避免 8080 被占用。已建立過此容器時，改用 docker start web-homework-site。
+          </p>
+        </div>
+        <div class="panel" id="panel-git" role="tabpanel" aria-labelledby="tab-git" tabindex="0" hidden>
+          <h3>建立第一份版本紀錄</h3>
+          <p>在解壓縮後的專案根目錄執行。需先安裝 Git，並設定自己的提交姓名和電子郵件。</p>
+          <div class="row"><span class="hint">這些指令只建立本機紀錄</span><button class="copy"
+              data-copy="git-command">複製指令</button></div>
+          <pre id="git-command">git init
+git add .
+git commit -m "Add my first website"
+git status</pre>
+          <p>上傳 GitHub、開啟 Pages 是接下來的步驟。詳細順序請看專案內的 README.md。</p>
+        </div>
+      </div>
+      <p class="status" id="copy-status" role="status" aria-live="polite">這裡提供操作指引，不會自動在你的電腦執行指令或驗證作業完成狀態。</p>
+    </section>
+    <section id="review" class="bottom" aria-label="複習與教材">
+      <div class="notes">
+        <h2>三個容易混淆的地方</h2>
+        <details>
+          <summary>網頁檔案和網站，有什麼不同？</summary>
+          <p>HTML 是檔案。瀏覽器可以直接讀它，也可以透過伺服器取得它。GitHub Pages 提供網站託管，讓別人透過網址開啟你的檔案。</p>
+        </details>
+        <details>
+          <summary>Image 和 Container 有什麼不同？</summary>
+          <p>Image（映像）是建立容器的範本；Container（容器）是依照映像建立的執行實例。同一個映像可以建立多個容器。</p>
+        </details>
+        <details>
+          <summary>Commit 等於上傳嗎？</summary>
+          <p>不是。Commit 將變更記錄在本機 Git 儲存庫；Push 才會把本機提交傳到設定好的遠端儲存庫。</p>
+        </details>
+      </div>
+      <div class="resources">
+        <h2>回到課程教材</h2>
+        <ul>
+          <li><a href="https://hackmd.io/@Eric0413/2025-html5_orientation" target="_blank" rel="noopener">HTML
+              網頁課程講義</a></li>
+          <li><a href="https://github.com/jefffang19/python_helloworld/tree/main" target="_blank" rel="noopener">Docker
+              Practice 2 指定專案</a></li>
+        </ul>
+        <p class="status">Docker 練習：docker_2026.pdf 第 18–21 頁。<br>Git 指令與 Pages：2026Git.pdf 第 26–29 頁。</p>
+        <p class="status">課程作業：自我介紹網頁、GitHub Pages、Docker 基本指令與 Jupyter 示範。代表圖來源：教師的 python_helloworld 專案 hello.jpg。</p>
+      </div>
+    </section>
+  </main>
+  <footer>WEB LAB · 我的第一個網頁 · HTML / CSS / JavaScript</footer>
+  <!-- JavaScript 只負責頁籤切換與複製文字，並不執行 Docker 或 Git。 -->
+  <script>
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    function selectTab(tab) {
+      tabs.forEach(item => {
+        const active = item === tab;
+        item.setAttribute('aria-selected', String(active));
+        item.tabIndex = active ? 0 : -1;
+        document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
+      });
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', event => {
+        let next;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = tabs.length - 1;
+        if (next !== undefined) { event.preventDefault(); selectTab(tabs[next]); tabs[next].focus(); }
+      });
+    });
+    document.querySelectorAll('[data-copy]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = document.getElementById(button.dataset.copy);
+        const status = document.getElementById('copy-status');
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = '已複製指令。請到專案資料夾的 PowerShell 貼上並執行。';
+        } catch {
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(code); selection.removeAllRanges(); selection.addRange(range);
+          status.textContent = '瀏覽器無法自動複製，已選取指令；請按 Ctrl + C（Mac：Command + C）。';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
