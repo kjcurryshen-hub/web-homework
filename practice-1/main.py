@@ -2,3 +2,7 @@
 print("Hello Docker!")
 print("This Python program is running inside a container when launched with docker exec.")
 print("Edit this file on your computer, then run it again inside the container.")
+
+#cd practice-1
+#docker start practice1
+#docker exec -it practice1 python main.py
